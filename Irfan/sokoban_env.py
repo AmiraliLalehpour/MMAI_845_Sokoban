@@ -264,8 +264,8 @@ class SokobanEnv(gym.Env):
         self.box_mapping = self.original_box_mapping.copy()
         self.player_position = self.original_player_position.copy()
 
-        # Return the preprocessed observation
-        return preprocess_observation(self.room_state)
+        starting_observation = self.render(render_mode)
+        return starting_observation
 
     def render(self, mode='human', close=None, scale=1):
         assert mode in RENDERING_MODES

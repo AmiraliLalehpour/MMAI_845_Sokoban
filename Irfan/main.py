@@ -8,11 +8,12 @@ import gym_sokoban
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 import tensorflow as tf
 from sokoban_env import SokobanEnv
 
 #Import files with different models
-from dqn import dqn_CNN
+from dqn import train_dqn
 from sarsa import sarsa
 import sys
 
@@ -35,7 +36,7 @@ env.seed(seed)
 
 
 #How to visualize the environment
-#env.render(mode='human')
+env.render(mode='human')
 #env.render(mode='rgb_array')
 env.render(mode='human')
 # Action lookup
@@ -65,7 +66,9 @@ exploration_final_eps = 0.01
 
 print("Hello Observation shape before preprocessing:", env.observation_space.shape)
 # Run the DQN with CNN policy and get the average total reward
-avg_total_reward = dqn_CNN(env, num_episodes, batch_size, learning_rate, discount_factor, exploration_fraction, exploration_final_eps)
+# Example usage
+reward = train_dqn(env, num_episodes=10000, learning_rate=1e-3, discount_factor=0.99, exploration_fraction=0.1,exploration_final_eps=0.01, target_model_update=1e-2)
+
 print("Average Total Reward:", avg_total_reward)
 
 env.close()

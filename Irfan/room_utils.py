@@ -1,15 +1,6 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import random
 import numpy as np
 import marshal
-
-
-# In[2]:
 
 
 def generate_room(dim=(13, 13), p_change_directions=0.35, num_steps=25, num_boxes=3, tries=4, second_player=False):
@@ -278,9 +269,6 @@ def depth_first_search(room_state, room_structure, box_mapping, box_swaps=0, las
                                last_pull, ttl)
 
 
-# In[8]:
-
-
 def reverse_move(room_state, room_structure, box_mapping, last_pull, action):
     """
     Perform reverse action. Where all actions in the range [0, 3] correspond to
@@ -323,10 +311,6 @@ def reverse_move(room_state, room_structure, box_mapping, last_pull, action):
                         last_pull = k
 
     return room_state, box_mapping, last_pull
-
-
-# In[9]:
-
 
 def box_displacement_score(box_mapping):
     """
@@ -372,10 +356,6 @@ ACTION_LOOKUP = {
     6: 'move left',
     7: 'move right',
 }
-
-
-# In[12]:
-
 
 # Moves are mapped to coordinate changes as follows
 # 0: Move up

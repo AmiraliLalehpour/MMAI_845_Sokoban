@@ -1,16 +1,6 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import numpy as np
 import pkg_resources
 import imageio
-
-
-# In[2]:
-
 
 def room_to_rgb(room, room_structure=None):
     """
@@ -183,9 +173,6 @@ def get_proper_box_surface(surfaces_id, box_mapping, i, j):
     return surface
 
 
-# In[6]:
-
-
 def room_to_tiny_world_rgb_FT(room, box_mapping, room_structure=None, scale=1):
         room = np.array(room)
         if not room_structure is None:
@@ -288,9 +275,6 @@ def get_proper_tiny_box_surface(surfaces_id, box_mapping, i, j):
     return surface
 
 
-# In[8]:
-
-
 def color_player_two(room_rgb, position, room_structure):
     resource_package = __name__
 
@@ -311,9 +295,6 @@ def color_player_two(room_rgb, position, room_structure):
         room_rgb[x_i:(x_i + 16), y_j:(y_j + 16), :] = player
 
     return room_rgb
-
-
-# In[9]:
 
 
 def color_tiny_player_two(room_rgb, position, room_structure, scale = 4):
@@ -342,10 +323,6 @@ TYPE_LOOKUP = {
     5: 'player'
 }
 
-
-# In[11]:
-
-
 ACTION_LOOKUP = {
     0: 'push up',
     1: 'push down',
@@ -356,9 +333,6 @@ ACTION_LOOKUP = {
     6: 'move left',
     7: 'move right',
 }
-
-
-# In[12]:
 
 
 # Moves are mapped to coordinate changes as follows
