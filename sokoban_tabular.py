@@ -24,7 +24,7 @@ def sarsa(env, num_episodes=100, learning_rate=0.2, discount_factor=0.9, explora
     total_reward_list = []
 
     for episode in range(num_episodes):
-        state = env.second_reset()
+        state = env.reset()
         state_tuple = state_to_tuple(state)
         done = False
         reward_list = 0
@@ -79,7 +79,7 @@ def q_learning(env, num_episodes=100, learning_rate=0.2, discount_factor=0.9, ex
     total_reward_list = []
 
     for episode in range(num_episodes):
-        state = env.second_reset()
+        state = env.reset()
         state_tuple = state_to_tuple(state)
         done = False
         reward_list = 0
