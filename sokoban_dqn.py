@@ -174,8 +174,8 @@ game_env = my_sokoban_env(initial_agent_position=initial_agent_position,
 # In[14]:
 
 
-game_env.reset()
-game_env.render(mode='human')
+# game_env.reset()
+# game_env.render(mode='human')
 
 
 # In[15]:
@@ -199,6 +199,12 @@ game_env.render(mode='human')
 # In[18]:
 
 
+# pip install mcts
+
+
+# In[19]:
+
+
 import gym
 import numpy as np
 import torch
@@ -209,10 +215,10 @@ from tqdm import tqdm
 
 from stable_baselines3.common.atari_wrappers import AtariWrapper
 from stable_baselines3.common.vec_env import DummyVecEnv
-from stable_baselines3.dqn import CnnPolicy
+from stable_baselines3.dqn import CnnPolicy, MlpPolicy
 
 
-# In[19]:
+# In[30]:
 
 
 def train_sokoban():
@@ -226,18 +232,18 @@ def train_sokoban():
     env = DummyVecEnv([lambda: env])
 
     # Define and train the DQN model
-    model = DQN("CnnPolicy", env, buffer_size=10000, verbose=1)
+    model = DQN("MlpPolicy", env, buffer_size=50000,learning_starts=5000, verbose=1)
 
     # Use the modified second_reset function for resetting the environment
     model.set_env(env)
-    model.learn(total_timesteps=100000)
+    model.learn(total_timesteps=20000)
 
     # Save the trained model
-    model.save("sokoban_dqn_model")
+    model.save("sokoban_dqn_model_ml")
 
 
 
-# In[ ]:
+# In[31]:
 
 
 if __name__ == "__main__":
@@ -288,25 +294,83 @@ def test_sokoban(model, num_episodes=100):
         env.render(mode='human')
 
 if __name__ == "__main__":
-    model = DQN.load("sokoban_dqn_model")
+    model = DQN.load("sokoban_dqn_model_ml")
+    test_sokoban(model)
+
+
+# # Implement PPO
+
+# In[46]:
+
+
+pip uninstall torch
+
+
+# In[32]:
+
+
+pip install torch
+
+
+# In[41]:
+
+
+from stable_baselines3 import PPO
+# from stable_baselines3.common.envs import DummyVecEnv
+
+def train_sokoban():
+    # Create the Sokoban environment
+    env = my_sokoban_env(initial_agent_position=initial_agent_position,
+                        initial_box_mapping=initial_box_mapping,
+                        initial_room_fixed=initial_room_fixed,
+                        initial_room_state=initial_room_state)
+
+    # Wrap the environment with DummyVecEnv to support training with PPO
+    env = DummyVecEnv([lambda: env])
+
+    # Define and train the PPO model
+    model = PPO("MlpPolicy", env, n_steps=128, batch_size=128, verbose=1)
+
+    model.learn(total_timesteps=20000)
+
+    # Save the trained model
+    model.save("sokoban_ppo_model")
+    
+if __name__ == "__main__":
+    train_sokoban()
+
+
+# In[38]:
+
+
+def test_sokoban():
+    # Load the trained model
+#     model = PPO.load("sokoban_ppo_model")
+
+    # Create the Sokoban environment
+    env = my_sokoban_env(initial_agent_position=initial_agent_position,
+                        initial_box_mapping=initial_box_mapping,
+                        initial_room_fixed=initial_room_fixed,
+                        initial_room_state=initial_room_state)
+
+    # Wrap the environment with DummyVecEnv to support testing with PPO
+    env = DummyVecEnv([lambda: env])
+
+    obs = env.reset()
+
+    for _ in range(1000):
+        action, _states = model.predict(obs)
+        obs, rewards, dones, info = env.step(action)
+        env.render()
+
+if __name__ == "__main__":
+    model = PPO.load("sokoban_ppo_model")
     test_sokoban(model)
 
 
 # In[ ]:
 
 
-# Test the trained model
-state = env.reset()
-done = False
-while not done:
-    action, _ = dqn_model.predict(state)
-    state, _, done, _ = env.step(action)
-    env.render()
-
-
-# In[ ]:
-
-
 
 
 
@@ -322,52 +386,118 @@ while not done:
 
 
 
-# In[ ]:
-
-
-
-
+# # MCTS
 
 # In[ ]:
 
 
+import numpy as np
+import gym
+import gym_sokoban
+import matplotlib.pyplot as plt
+from custom_sokoban_env import my_sokoban_env
+import sokoban_tabular
+import time
+import sys
+import random 
+import itertools
+import cv2
+from dqn import train_dqn
+
+
+# In[31]:
+
+
+import numpy as np
+
+class Node:
+    def __init__(self, state, env):
+        self.state = state
+        self.is_terminal = env._check_if_done()  # use your own termination check function
+        self.is_fully_expanded = self.is_terminal
+        self.children = {}
+        self.parent = None  # parent node
+        self.num_visits = 0
+        self.total_reward = 0  # sum of rewards
+        self.env = env  # store the environment
+
+#     def expand(self):
+#         for action in self.env.get_valid_actions():  # get valid actions for the current state
+#             if action not in self.children:
+#                 next_state, reward, done, info = self.env.step(action)  # take the action
+#                 child_node = Node(next_state, self.env)  # create a new node with the new state and the environment
+#                 child_node.is_terminal = done
+#                 child_node.parent = self  # set the parent of the new node
+#                 self.children[action] = (child_node, reward)
+                
+    def expand(self):
+        for action in self.env.get_valid_actions():  # get valid actions for the current state
+            if action not in self.children:
+                next_state, reward, done, info = self.env.step(action)  # take the action
+                child_node = Node(next_state, self.env)  # create a new node with the new state and the environment
+                child_node.is_terminal = done
+                child_node.parent = self  # set the parent of the new node
+                self.children[action] = (child_node, reward)
+                
+    def best_child(self, c_param=1.0):
+        choices_weights = []
+        for child_node, _ in self.children.values():
+            if child_node.num_visits == 0:
+                choices_weights.append(float("inf"))  # prioritize exploration for unvisited nodes
+            else:
+                choices_weights.append((child_node.total_reward / child_node.num_visits) + 
+                                       c_param * np.sqrt((2 * np.log(self.num_visits) / child_node.num_visits)))
+        best_action = list(self.children.keys())[np.argmax(choices_weights)]
+        return self.children[best_action][0]  # Return the child node, not the action
 
 
 
-# In[ ]:
+    def rollout(self):
+        current_rollout_state = self.state
+        while not self.env.is_done(current_rollout_state):  # use your own termination check function
+            possible_moves = self.env.get_valid_actions(current_rollout_state)
+            action = self.rollout_policy(possible_moves)
+            next_state, reward, done, info = self.env.step(action)
+            current_rollout_state = next_state
+        return self.env.get_reward(current_rollout_state)  # return reward of terminal state
 
+    @staticmethod
+    def rollout_policy(possible_moves):
+        return possible_moves[np.random.randint(len(possible_moves))]
 
+def mcts(env, iterations):
+    root = Node(env.reset(), env)
+    root.is_terminal = env._check_if_done()
+    print("Initial root node terminal state:", root.is_terminal)  # Debug statement
+    for i in range(iterations):
+        print("Iteration:", i+1)  # Debug statement
+        node = root
+        while not node.is_terminal:
+#             print("Node terminal state:", node.is_terminal)  # Debug statement
+            if node.is_fully_expanded:
+#                 print("Node is fully expanded, getting best child...")  # Debug statement
+                node = node.best_child()
+            else:
+#                 print("Node is not fully expanded, expanding...")  # Debug statement
+                node.expand()
+                node.is_fully_expanded = True
+        reward = node.rollout()
+        print("Rollout reward:", reward)  # Debug statement
+        while node is not None:
+            node.num_visits += 1
+            node.total_reward += reward
+            node = node.parent
+    return root
 
+# You can then use the tree like this:
 
+initial_state = env.reset()  # Or however you define your initial state
 
-# In[ ]:
+# Create a MCTS instance with the game and initial state
+my_mcts = mcts(env, 1000)
 
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+# Get the best action according to MCTS
+best_action = my_mcts.best_child().state
 
 
 # In[ ]:
