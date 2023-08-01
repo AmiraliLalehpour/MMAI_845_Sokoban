@@ -21,7 +21,10 @@ import itertools
 # In[ ]:
 
 
+# Install these if needed
 # pip install gym==0.21.0
+# !pip install pyglet
+#!pip install imageio
 
 
 # In[ ]:
@@ -67,7 +70,7 @@ print(sys.version)
 def state_to_tuple(state):
     return tuple(state.reshape(-1))
 
-# Save the original state of the environment
+# Save the original state of the environment, used first deciding on a env to keep constant
 # initial_state = game_env.reset()
 # initial_state_tuple = state_to_tuple(initial_state)
 # game_env.render(mode='human')
@@ -173,8 +176,9 @@ game_env = my_sokoban_env(initial_agent_position=initial_agent_position,
 # In[ ]:
 
 
-game_env.reset()
-game_env.render(mode='human')
+## if you want to see the generated shape
+# game_env.reset()
+# game_env.render(mode='human')
 
 
 # # Plots 7 Functions
@@ -239,9 +243,9 @@ if __name__=='__main__':
         print("------ Running SARSA ------")
         # Parameters for SARSA algorithm
         num_episodes = 300
-        learning_rate = 0.4
-        discount_factor = 0.9
-        exploration_prob = 0.05
+        learning_rate = 0.5
+        discount_factor = 0.99
+        exploration_prob = 0.01
         
         sarsa_rews, sarsa_table = sokoban_tabular.sarsa(env, num_episodes=num_episodes, 
                                                  learning_rate=learning_rate, 
@@ -256,9 +260,9 @@ if __name__=='__main__':
     if run_q_learning:
         print("------ Running Q-learning ------")
         num_episodes = 300
-        learning_rate = 0.4
-        discount_factor = 0.9
-        exploration_prob = 0.05
+        learning_rate = 0.5
+        discount_factor = 0.99
+        exploration_prob = 0.01
         
         ql_rews, ql_table = sokoban_tabular.q_learning(env, num_episodes=num_episodes, 
                                                  learning_rate=learning_rate, 
