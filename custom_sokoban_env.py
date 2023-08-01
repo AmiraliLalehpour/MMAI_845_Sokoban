@@ -1,6 +1,21 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[ ]:
+
+
+#This env is originally created by the following and we modified it for our project
+# @misc{SchraderSokoban2018,
+#   author = {Schrader, Max-Philipp B.},
+#   title = {gym-sokoban},
+#   year = {2018},
+#   publisher = {GitHub},
+#   journal = {GitHub repository},
+#   howpublished = {\url{https://github.com/mpSchrader/gym-sokoban}},
+#   commit = {#CommitId}
+# }
+
+
 # In[18]:
 
 
@@ -213,29 +228,7 @@ class my_sokoban_env(gym.Env):
     def _check_if_maxsteps(self):
         return (self.max_steps == self.num_env_steps)
     
-#     def reset(self, second_player=False, render_mode='rgb_array'):
-#         try:
-#             self.room_fixed, self.room_state, self.box_mapping = generate_room(
-#                 dim=self.dim_room,
-#                 num_steps=self.num_gen_steps,
-#                 num_boxes=self.num_boxes,
-#                 second_player=second_player,
-                
-#             )
-
-#         except (RuntimeError, RuntimeWarning) as e:
-#             print("[SOKOBAN] Runtime Error/Warning: {}".format(e))
-#             print("[SOKOBAN] Retry . . .")
-#             return self.reset(second_player=second_player, render_mode=render_mode)
-
-#         self.player_position = np.argwhere(self.room_state == 5)[0]
-#         self.num_env_steps = 0
-#         self.reward_last = 0
-#         self.boxes_on_target = 0
-
-#         starting_observation = self.render(render_mode)
-#         return starting_observation
-    
+# Rest the env to original starting state   
     def reset(self, second_player=False, render_mode='rgb_array'):
         if self.initial_room_fixed is None:
             self.initial_room_fixed, self.initial_room_state, self.initial_box_mapping = generate_room(
