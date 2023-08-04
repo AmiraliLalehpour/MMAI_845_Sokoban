@@ -1,21 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[9]:
-
-
 import numpy as np
 import time
 
 
-# In[10]:
-
-
 def state_to_tuple(state):
     return tuple(state.reshape(-1))
-
-
-# In[11]:
 
 
 # Function to train the agent using SARSA algorithm
@@ -68,9 +59,6 @@ def sarsa(env, num_episodes=100, learning_rate=0.2, discount_factor=0.9, explora
     print("All Rewards:", total_reward_list)
     return total_reward_list, q_table
 
-
-
-# In[12]:
 
 
 # Function to train the agent using Q-Learning algorithm
