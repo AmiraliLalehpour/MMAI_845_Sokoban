@@ -3,3 +3,8 @@ For PPo and DQN, run the sokoban_PPO_DQN file
 The tabular methods are avialbel in .py notebook version but the main_sokoban is in both .py and Jupyter
 
 The link for the saved models is here:
+
+
+The GitHub repository address is:
+
+https://github.com/AmiraliLalehpour/MMAI_845_Sokoban.git
