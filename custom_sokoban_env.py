@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
 
 #This env is originally created by the following and we modified it for our project
 # @misc{SchraderSokoban2018,
@@ -14,9 +9,6 @@
 #   howpublished = {\url{https://github.com/mpSchrader/gym-sokoban}},
 #   commit = {#CommitId}
 # }
-
-
-# In[18]:
 
 
 import gym
@@ -274,7 +266,7 @@ class my_sokoban_env(gym.Env):
             return arr_walls, arr_goals, arr_boxes, arr_player
 
         else:
-            super(SokobanEnv, self).render(mode=mode)  # just raise an exception
+            super(my_sokoban_env, self).render(mode=mode)  # just raise an exception
 
     def get_image(self, mode, scale=1):
         
@@ -324,8 +316,6 @@ CHANGE_COORDINATES = {
 
 RENDERING_MODES = ['rgb_array', 'human', 'tiny_rgb_array', 'tiny_human', 'raw']
 
-
-# In[ ]:
 
 
 

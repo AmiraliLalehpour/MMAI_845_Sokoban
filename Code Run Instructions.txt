@@ -1,0 +1,5 @@
+Please run the main_sokoban for tabular methods, SARSA & Q-Learning. 
+For PPo and DQN, run the sokoban_PPO_DQN file
+The tabular methods are avialbel in .py and  jupyetr notebook versions
+
+The link for the saved models is here:

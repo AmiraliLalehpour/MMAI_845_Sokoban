@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import numpy as np
 import gym
 import gym_sokoban
@@ -16,54 +10,32 @@ import random
 import itertools
 
 
-# # Check System Requirements
-
-# In[ ]:
-
-
 # Install these if needed
 # pip install gym==0.21.0
 # !pip install pyglet
 #!pip install imageio
 
 
-# In[ ]:
-
-
 print(gym.__version__)
-
-
-# In[ ]:
 
 
 print(sys.version)
 
 
-# # Define the environment and number of boxes
-
-# In[ ]:
-
+# # Define the environment and number of boxes. These are used first time seting up th env
 
 # # Create the Sokoban environment from sokoban versions.
 # env_name = 'Sokoban-v2'
 # game_env = gym.make(env_name)
 
 
-# In[ ]:
-
-
 # Create the Sokoban environment custom
 # game_env = my_sokoban_env(dim_room=(10, 10), num_boxes=3)
-
-
-# In[ ]:
 
 
 # game_env.reset()
 # game_env.render(mode='human')
 
-
-# In[ ]:
 
 
 # Function to convert state to a tuple
@@ -74,9 +46,6 @@ def state_to_tuple(state):
 # initial_state = game_env.reset()
 # initial_state_tuple = state_to_tuple(initial_state)
 # game_env.render(mode='human')
-
-
-# In[ ]:
 
 
 # Action lookup
@@ -92,18 +61,11 @@ def state_to_tuple(state):
 
 # ![4_box_env.png](attachment:4_box_env.png)
 
-# In[ ]:
-
-
 # # We need to save the exact one we see below so comment this when selected the desired env topology
 # initial_agent_position = game_env.player_position
 # initial_box_mapping = game_env.box_mapping
 # initial_room_fixed = game_env.room_fixed
 # initial_room_state = game_env.room_state
-
-
-# In[ ]:
-
 
 # 3 Box environment
 initial_room_state = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -131,9 +93,6 @@ initial_room_fixed = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 initial_box_mapping = np.array({(3, 7): (7, 5), (4, 6): (3, 3), (6, 5): (2, 5)})
 
 initial_agent_position = np.array([3,2])
-
-
-# In[ ]:
 
 
 # # 4 Box environment
@@ -164,8 +123,6 @@ initial_agent_position = np.array([3,2])
 # initial_agent_position = np.array([2, 3])
 
 
-# In[ ]:
-
 
 game_env = my_sokoban_env(initial_agent_position=initial_agent_position,
                         initial_box_mapping=initial_box_mapping,
@@ -173,17 +130,13 @@ game_env = my_sokoban_env(initial_agent_position=initial_agent_position,
                         initial_room_state=initial_room_state)
 
 
-# In[ ]:
-
 
 ## if you want to see the generated shape
 # game_env.reset()
 # game_env.render(mode='human')
 
 
-# # Plots 7 Functions
-
-# In[ ]:
+# # Plots & Functions
 
 
 def plot_rew(title, rew_list, label):
@@ -194,9 +147,6 @@ def plot_rew(title, rew_list, label):
     plt.plot(rew_list, label=label)
     plt.legend()
     plt.show()
-
-
-# In[ ]:
 
 
 # Function to test the agent's performance in one final test episode using the learned Q-table
@@ -224,9 +174,6 @@ def test_agent(q_table, game_env):
 
 
 # # Run Algorithms
-
-# In[ ]:
-
 
 if __name__=='__main__':
 
@@ -276,19 +223,12 @@ if __name__=='__main__':
         print("------ Finished running Q-learning ------")
 
 
-# In[ ]:
-
-
 plot_rew('SARSA', sarsa_rews, label = 'SARSA')
 
-
-# In[ ]:
 
 
 plot_rew('Q-Learning', ql_rews, label = 'Q-Learning')
 
-
-# In[ ]:
 
 
 
