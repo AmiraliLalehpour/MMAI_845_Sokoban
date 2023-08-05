@@ -2,8 +2,9 @@ Please run the main_sokoban for tabular methods, SARSA & Q-Learning.
 For PPo and DQN, run the sokoban_PPO_DQN file
 The tabular methods are avialbel in .py notebook version but the main_sokoban is in both .py and Jupyter
 
-The link for the saved models is here:
+The link for the saved code and models is here:
 
+https://queensuca-my.sharepoint.com/:f:/r/personal/22tj12_queensu_ca/Documents/Documents/Queens%20University/MMAI%20865%20-%20Reinforement%20Learning/Final%20Project/Sokoban/MMAI_845_Sokoban?csf=1&web=1&e=GfKjVN
 
 The GitHub repository address is:
 
